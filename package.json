@@ -1,0 +1,41 @@
+{
+  "name": "mdxish",
+  "version": "0.1.0",
+  "description": "Custom MDX-like processor for interactive documents",
+  "main": "dist/cli.js",
+  "type": "module",
+  "bin": {
+    "mdxish": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build",
+    "watch": "node dist/cli.js . --watch",
+    "serve": "live-server dist --no-browser",
+    "dev": "concurrently \"npm run serve\" \"npm run watch\""
+  },
+  "keywords": [
+    "mdx",
+    "markdown",
+    "interactive"
+  ],
+  "author": "Jason McGhee",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "js-yaml": "^4.1.0",
+    "jsdom": "^24.1.0",
+    "marked": "^13.0.2",
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.14.11",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.11",
+    "typescript": "^4.3.5"
+  }
+}

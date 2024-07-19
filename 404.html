@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDXish Gist Renderer</title>
+  <script src="/js/js-yaml.min.js"></script>
+  <script src="/js/marked.min.js"></script>
+  <style>
+    html {
+      --article-text-color: #0b0b0b;
+      --background-color: #fff;
+      --text-link: #0a69da;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html,
+      html[data-theme='dark'] {
+        --article-text-color: #d8d8d8;
+        --background-color: #010409;
+      }
+    }
+
+    ::selection {
+      background: var(--article-text-color);
+      color: var(--background-color);
+    }
+
+    html {
+      background-color: var(--background-color);
+      color: var(--article-text-color);
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="loading">Loading...</div>
+<script src="/index.js" type="module"></script>
+</body>
+</html>

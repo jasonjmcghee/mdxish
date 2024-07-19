@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    // add the dom
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
