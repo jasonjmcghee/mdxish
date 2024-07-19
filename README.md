@@ -6,6 +6,10 @@ There are two main ways mdxish can be used.
 
 1. Put a mdxish flavored markdown file called `index.md` in a gist, copy the gist id, and go to `https://mdx.com/{gistId}` (e.g. https://mdxish.com/cba64163600fa90a3ea5d2ea099f3b55)
 
+Checkout the source: https://gist.github.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
+
+You can form the URL like: https://mdxish.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
+
 2. Convert mdxish flavored markdown into static html locally / in CI/CD.
 
 For example:
