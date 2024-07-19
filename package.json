@@ -9,11 +9,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/cli.js",
     "prepublishOnly": "npm run build",
-    "watch": "node dist/cli.js . --watch",
-    "serve": "live-server dist --no-browser",
-    "dev": "concurrently \"npm run serve\" \"npm run watch\""
+    "convert": "node dist/cli.js",
+    "server": "node dist/server.js"
   },
   "keywords": [
     "mdx",
