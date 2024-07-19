@@ -10,7 +10,7 @@ https://mdxish.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
 
 (or you can drop the username https://mdxish.com/cba64163600fa90a3ea5d2ea099f3b55)
 
-Source:
+Source (click "Raw" to see the raw markdown):
 
 https://gist.github.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
 
