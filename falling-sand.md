@@ -4,18 +4,17 @@ font: https://fonts.googleapis.com/css2?family=Roboto&display=swap
 scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"
-head: |
+  - https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js
+head: '
   <link rel="stylesheet" href="css/prism.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/jason.css">
+'
 ---
 
 ```javascript
-// @run type="application/javascript"
-const time = document.querySelector('[data-id="time"]');
-
+// @run
 // Our Library
 window.darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 window.background = window.darkMode ? "#0d1014" : "#f6f6f6";
@@ -188,14 +187,13 @@ window.SAND_COLOR = "#dcb159";
 
 Over the years there have been a number of projects focusing on building systems of particle materials that interact with one another. The first I saw was called "Powder Game", which had all kinds of features and was written in Java. More recently there has been [Sandspiel](https://sandspiel.club/) and an entire roguelike game (ignoring the [Berlin Interpretation](https://web.archive.org/web/20220416113035/http://www.roguebasin.com/index.php?title=Berlin_Interpretation) for a moment) built on the idea that the entire environment is made of particle materials similar to falling sand games, called [Noita](https://noitagame.com/) (which is pretty fantastic and you should give it a try!).
 
-A ?[fun](fun) exercise is implementing one of these falling material particle systems.
+A <span id="fun">fun</span> exercise is implementing one of these falling material particle systems.
 
 ```javascript
 // @run
-mdxref('fun').addEventListener("click", () => {
+document.querySelector("#fun").addEventListener("click", () => {
   window.SAND_COLOR = "#0cb159";
 });
-document.querySelector('[data-id="fun"]')
 ```
 
 In this post, we'll just implement the most basic material, "sand".
@@ -524,3 +522,176 @@ make('final', 80, 40, 4, makeLogic(SettlingLogic2, SettlingGrid));
 That's it for now! If this was interesting, feel free to reach out to me! I'm considering making this a series, highlighting different materials and the emergent behavior that can arise. Another aspect is performance. Our current approach will not scale very well, but there are both lower-level approaches and tricks we can use to improve it!
 
 (2022-05-15) Check out the next post in the series, [Improving the foundation of our falling sand simulator](https://jason.today/falling-improved)!
+
+---
+
+<input id="seek" type="range" value="0"></input>
+<button id="pause">Toggle Pause</button>
+
+<div id="time-animation"></div>
+
+```javascript
+// @run
+
+const plot2D = p5.prototype.plot2D = function (
+  start, end, xFn, yFn, {strokeWeight = 3, preVertex = (fraction, value) => {}} = {}
+) {
+  this.strokeWeight(strokeWeight);
+  this.noFill();
+  this.beginShape();
+  preVertex(0, start);
+  let x = xFn(start), y = yFn(start);
+  this.curveVertex(x, y);
+  this.endShape();
+  const partial = 1 / (end - start);
+  for (let i = start; i <= end; i++) {
+    this.beginShape();
+    preVertex((i - start) * partial, i);
+    let lastX = xFn(i - 1), lastY = yFn(i - 1);
+    this.curveVertex(lastX, lastY);
+    this.curveVertex(lastX, lastY);
+    let x = xFn(i), y = yFn(i);
+    this.curveVertex(x, y);
+    this.curveVertex(x, y);
+    this.endShape();
+  }
+  this.beginShape();
+  preVertex(1, end);
+  x = xFn(end);
+  y = yFn(end);
+  this.curveVertex(x, y);
+  this.curveVertex(x, y);
+  this.endShape();
+  this.strokeWeight(1);
+}
+
+new p5(p => {
+// Adapted (look, feel, and parameterized by time) from:
+// Daniel Shiffman
+// https://thecodingtrain.com/CodingChallenges/093-double-pendulum.html
+
+  let size = 300;
+  let duration = 1000;
+  let paused = window.mdxishState.paused ?? false;
+  let seek = document.querySelector("#seek");
+  let wasPaused = paused;
+  
+  document.querySelector("#pause").addEventListener("click", () => {
+    paused = !paused;
+    window.mdxishState.paused = paused;
+  });
+
+  seek.max = duration;
+  seek.value = window.mdxishState.time ?? 0;
+  seek.addEventListener("input", (e) => {
+    window.mdxishState.time = e.target.value;
+  });
+  seek.addEventListener("mousedown", (e) => {
+    wasPaused = paused;
+    paused = true;
+  });
+  seek.addEventListener("mouseup", (e) => {
+    paused = wasPaused;
+  });
+
+  let r1 = size / 7;
+  let r2 = r1;
+  let m1 = r1 / 7;
+  let m2 = m1;
+  let g = size / 500;
+
+  let px2 = -1;
+  let py2 = -1;
+  let cx, cy;
+
+  let buffer;
+  let frames = [];
+
+  const calculateFrames = () => {
+    let a1 = p.PI / 2;
+    let a2 = p.PI / 2;
+    let a1_v = 0;
+    let a2_v = 0;
+    cx = p.width / 2;
+    cy = p.height / 3;
+
+    frames = [];
+    for (var i = 0; i <= duration; i++) {
+      let num1 = -g * (2 * m1 + m2) * p.sin(a1);
+      let num2 = -m2 * g * p.sin(a1 - 2 * a2);
+      let num3 = -2 * p.sin(a1 - a2) * m2;
+      let num4 = a2_v * a2_v * r2 + a1_v * a1_v * r1 * p.cos(a1 - a2);
+      let den = r1 * (2 * m1 + m2 - m2 * p.cos(2 * a1 - 2 * a2));
+      let a1_a = (num1 + num2 + num3 * num4) / den;
+
+      num1 = 2 * p.sin(a1 - a2);
+      num2 = (a1_v * a1_v * r1 * (m1 + m2));
+      num3 = g * (m1 + m2) * p.cos(a1);
+      num4 = a2_v * a2_v * r2 * m2 * p.cos(a1 - a2);
+      den = r2 * (2 * m1 + m2 - m2 * p.cos(2 * a1 - 2 * a2));
+      let a2_a = (num1 * (num2 + num3 + num4)) / den;
+
+      let x1 = r1 * p.sin(a1);
+      let y1 = r1 * p.cos(a1);
+
+      let x2 = x1 + r2 * p.sin(a2);
+      let y2 = y1 + r2 * p.cos(a2);
+
+      frames.push({x1, x2, y1, y2, px2, py2});
+
+      a1_v += a1_a;
+      a2_v += a2_a;
+      a1 += a1_v;
+      a2 += a2_v;
+
+      px2 = x2;
+      py2 = y2;
+    }
+  };
+
+  p.setup = () => {
+    p.createCanvas(size, size * 0.8);
+    calculateFrames();
+  }
+
+  p.draw = () => {
+    const t = (window.mdxishState.time ?? 0) % duration;
+    p.background(0);
+
+    const fadingGradient = (_, value, minVal = 0.2, length = duration / 5) => {
+      let fraction = Math.max(minVal, 1 - ((t - value) / length));
+      p.stroke(
+        p.lerpColor(
+          p.color('#277DA1'),
+          p.color('#F76C5E'),
+          fraction,
+        )
+      );
+      p.strokeWeight(fraction * 3);
+    };
+    
+    const {x1, x2, y1, y2, px2, py2} = frames[p.floor(t)];
+
+    p.translate(cx, cy);
+    p.stroke('white');
+    p.strokeWeight(2);
+
+    p.line(0, 0, x1, y1);
+    p.fill(0);
+    p.ellipse(x1, y1, m1, m1);
+
+    p.line(x1, y1, x2, y2);
+    p.fill(0);
+    p.ellipse(x2, y2, m2, m2);
+
+    if (t >= 1) {
+      p.plot2D(1, p.floor(t), (i) => frames[i].x2, (i) => frames[i].y2, {strokeWeight: 2, preVertex: fadingGradient})
+    }
+    
+    if (!paused) {
+      window.mdxishState.time = t + 1.0;
+      seek.value = t;
+    }
+  }
+}, "time-animation");
+```
