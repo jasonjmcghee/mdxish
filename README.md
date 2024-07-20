@@ -1,5 +1,8 @@
 # mdxish
 
+[![NPM Version](https://img.shields.io/npm/v/mdxish.svg?style=flat)]()
+[![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/jasonjmcghee/mdxish/blob/master/LICENSE)
+
 mdxish is meant to make it easy to write mixed media and interactive blog posts.
 
 ## Checkout an example
