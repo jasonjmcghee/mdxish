@@ -35,7 +35,7 @@ function hashFile(content: string): string {
   return crypto.createHash('md5').update(content).digest('hex');
 }
 
-const watcherJs = `<script type="module">
+const watcherJs = `<script type="application/javascript">
 const ws = new WebSocket('ws://' + location.host);
 let lastState = null;
 
