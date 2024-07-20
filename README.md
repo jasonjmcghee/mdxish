@@ -1,6 +1,6 @@
 # mdxish
 
-[![NPM Version](https://img.shields.io/npm/v/mdxish.svg?style=flat)]()
+[![NPM Version](https://img.shields.io/npm/v/mdxish.svg?style=flat)](https://www.npmjs.com/package/mdxish)
 [![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/jasonjmcghee/mdxish/blob/master/LICENSE)
 
 Write high-quality, interactive blog posts in markdown, live.
