@@ -3,7 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/mdxish.svg?style=flat)]()
 [![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/jasonjmcghee/mdxish/blob/master/LICENSE)
 
-mdxish is meant to make it easy to write mixed media and interactive blog posts.
+A simple and efficient way to write high-quality, interactive blog posts.
 
 ## Checkout an example
 
@@ -16,6 +16,10 @@ https://mdxish.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
 Source (click "Raw" to see the raw markdown):
 
 https://gist.github.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
+
+## 4-Minute Video Introduction (🔉 Sound on)
+
+https://github.com/user-attachments/assets/cc416a37-5d33-4452-a5b2-7754e6932fad
 
 ## Getting started
 
