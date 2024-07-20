@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/cc416a37-5d33-4452-a5b2-7754e6932fad
 There are two main ways mdxish can be used.
 
 1. Convert mdxish flavored markdown into static html locally (live or one-off) or in CI/CD.
-2. Put a mdxish flavored markdown file called `index.md` in a gist, copy the gist id, and go to `https://mdx.com/{gistId}`
+2. Put a mdxish flavored markdown file called `index.md` in a gist, copy the gist id, and go to `https://mdxish.com/{gistId}`
 
 For example:
 
