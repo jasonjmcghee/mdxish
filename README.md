@@ -5,6 +5,11 @@
 
 Write high-quality, interactive blog posts in markdown, live.
 
+## In a nutshell
+- write in markdown optionally including html
+- start a codeblock with `// @run` to auto-execute
+- optionally specify title and head block (e.g. custom styles or scripts outside of core post)
+
 ## Checkout an example
 
 Blog Post (directly from a gist):
