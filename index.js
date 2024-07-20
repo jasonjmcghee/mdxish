@@ -202,8 +202,7 @@ async function main() {
   const gistId = path[path.length - 1];
 
   if (!gistId) {
-    console.error('No gist ID provided in the URL');
-    document.body.innerHTML = '<h1>Error: No gist ID provided</h1>';
+    window.location.replace("https://github.com/jasonjmcghee/mdxish");
     return;
   }
 
@@ -222,7 +221,11 @@ async function main() {
     });
   } catch (error) {
     console.error('Error rendering gist:', error);
-    document.body.innerHTML = `<h1>Error rendering gist</h1><p>${error.message}</p>`;
+    document.body.innerHTML = `
+      <h1>Error rendering gist</h1>
+      <p>${error.message}</p>
+      <a href="https://github.com/jasonjmcghee/mdxish">How to use mdxish</a>
+    `;
   }
 }
 
