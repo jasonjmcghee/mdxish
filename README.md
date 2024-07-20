@@ -36,11 +36,11 @@ There are two main ways mdxish can be used.
 For example:
 
 ```bash
-npm run convert falling-sand.md falling-sand.html
+npm run convert examples/falling-sand.md falling-sand.html
 ```
 
 To launch a live server that will automatically keep HTML up to date with whatever you write in your mdxish flavored markdown:
 
 ```bash
-npm run server -- -i falling-sand.md
+npm run server -- -i examples/falling-sand.md
 ```
