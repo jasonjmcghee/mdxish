@@ -48,6 +48,7 @@ html {
 }
 button {
   color: var(--article-text-color);
+  background-color: var(--pre-background);
 }
 h1 {
   font-size: 400%;
@@ -150,5 +151,3 @@ img {
     border: solid 2px #3b3b3b;
   }
 }
-
-/*# sourceMappingURL=jason.css.map */

@@ -125,6 +125,12 @@ class CustomMDXProcessor {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>${this.config.title || 'Interactive Document'}</title>
+          <script type="application/javascript">
+            window.mdxishState = {
+              startTime: new Date(),
+            };
+            window.mdxref = (ref) => document.querySelector('[data-id="' + ref + '"]');
+          </script>
           ${this.config.font ? `<link href="${this.config.font}" rel="stylesheet">` : ''}
           ${this.config.scripts?.map(script => `<script src="${script}"></script>`).join('\n') || ''}
           <style>

@@ -6,14 +6,16 @@ scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"
 head: |
-  <link rel="stylesheet" href="prism.css">
-  <link rel="stylesheet" href="normalize.css">
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="jason.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/jason.css">
 ---
 
 ```javascript
 // @run type="application/javascript"
+const time = document.querySelector('[data-id="time"]');
+
 // Our Library
 window.darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 window.background = window.darkMode ? "#0d1014" : "#f6f6f6";
@@ -180,13 +182,21 @@ function makeLogic(logic, mapType) {
 window.SAND_COLOR = "#dcb159";
 ```
 
-# Making a falling sand simulator
+# Making a falling sand simulator!
 
 *This post is part of a series. Be sure to check the bottom of the article for the next post!*
 
 Over the years there have been a number of projects focusing on building systems of particle materials that interact with one another. The first I saw was called "Powder Game", which had all kinds of features and was written in Java. More recently there has been [Sandspiel](https://sandspiel.club/) and an entire roguelike game (ignoring the [Berlin Interpretation](https://web.archive.org/web/20220416113035/http://www.roguebasin.com/index.php?title=Berlin_Interpretation) for a moment) built on the idea that the entire environment is made of particle materials similar to falling sand games, called [Noita](https://noitagame.com/) (which is pretty fantastic and you should give it a try!).
 
-A fun exercise is implementing one of these falling material particle systems.
+A ?[fun](fun) exercise is implementing one of these falling material particle systems.
+
+```javascript
+// @run
+mdxref('fun').addEventListener("click", () => {
+  window.SAND_COLOR = "#0cb159";
+});
+document.querySelector('[data-id="fun"]')
+```
 
 In this post, we'll just implement the most basic material, "sand".
 
@@ -267,7 +277,9 @@ this.grid.forEach((color, index) => {
 ```
 
 Nice, now we can click, drag, and draw some particles. It's not great, but it's something!
+
 <div id="drawing"></div>
+
 Awesome! Let's add gravity.
 
 ```javascript
@@ -304,7 +316,7 @@ class DrawingLogic extends Logic {
 make('drawing', 40, 20, 8, makeLogic(DrawingLogic, DrawingGrid));
 ```
 
-## Adding gravity
+## Adding gravity!
 
 Before we implement our first rule, it's worth stating explicitly that all rules will be applied once per frame. This gives all particles equal opportunity to fulfill their rule, before another particle gets to apply their rule a second time.
 Our first rule: *gravity*.

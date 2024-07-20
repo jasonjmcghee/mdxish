@@ -33,5 +33,5 @@ You can also launch a live server that will automatically keep HTML up to date w
 For example:
 
 ```bash
-npm run server -i falling-sand.md
+npm run server -- -i falling-sand.md
 ```

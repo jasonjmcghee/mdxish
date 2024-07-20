@@ -35,117 +35,22 @@ function hashFile(content: string): string {
   return crypto.createHash('md5').update(content).digest('hex');
 }
 
-const additional = `<script type="module">
-// Initialize state
-window.state = window.state || {
-  scroll: 0,
-  wordProgress: 0,
-  scrollProgress: 0,
-  timeProgress: {
-    total: 0,
-    lastPaused: null,
-    isPaused: false
-  }
-};
-
-// State management functions
-window.updateState = (key, value) => {
-  window.state[key] = value;
-};
-
-window.getState = (key) => {
-  return window.state[key];
-};
-
-// Scroll progress
-window.addEventListener('scroll', () => {
-  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const scrollProgress = window.scrollY / scrollHeight;
-  window.updateState('scrollProgress', scrollProgress);
-});
-
-// Time progress
-function updateTimeProgress() {
-  if (!window.state.timeProgress.isPaused) {
-    const now = Date.now();
-    if (window.state.timeProgress.lastPaused) {
-      window.state.timeProgress.total += now - window.state.timeProgress.lastPaused;
-    }
-    window.state.timeProgress.lastPaused = now;
-  }
-}
-
-// setInterval(updateTimeProgress, 1000);
-
-// Time progress controls
-window.pauseTime = () => {
-  updateTimeProgress();
-  window.state.timeProgress.isPaused = true;
-};
-
-window.resumeTime = () => {
-  window.state.timeProgress.isPaused = false;
-  window.state.timeProgress.lastPaused = Date.now();
-};
-
-window.resetTime = () => {
-  window.state.timeProgress = {
-    total: 0,
-    lastPaused: null,
-    isPaused: false
-  };
-};
-
-// Word progress setter
-window.setWordProgress = (progress) => {
-  window.updateState('wordProgress', progress);
-};
-
-// Save state function
-window.saveState = () => {
-  updateTimeProgress();
-  return JSON.stringify(window.state);
-};
-
-// Restore state function
-window.restoreState = (stateJson) => {
-  const savedState = JSON.parse(stateJson);
-  window.state = { ...window.state, ...savedState };
-
-  // Restore scroll position
-  window.scrollTo(0, window.state.scroll);
-};</script>`;
-
 const watcherJs = `<script type="module">
 const ws = new WebSocket('ws://' + location.host);
 let lastState = null;
 
-function rerunScripts() {
-  const scripts = document.querySelectorAll('script');
-  scripts.forEach((script) => {
-    const newScript = document.createElement('script');
-    newScript.text = script.text;
-    newScript.type = 'module';
-    newScript.id = script.id;
-    script.parentNode.replaceChild(newScript, script);
-  });
-}
+window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
+  startTime: new Date(),
+};
 
 ws.onmessage = (event) => {
-  if (lastState) {
-    const state = window.saveState();
-    window.requestAnimationFrame(() => {
-      document.getElementById('content').innerHTML = event.data;
-      rerunScripts();
-      setTimeout(() => {
-        window.restoreState(state);
-      }, 0);
-    });
-  } else {
-    document.getElementById('content').innerHTML = event.data;
-    rerunScripts();
-  }
-  lastState = window.saveState();
+  localStorage['mdxishState'] = JSON.stringify(window.mdxishState);
+  window.location.reload();
+  window.requestAnimationFrame(() => {
+    window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
+      startTime: new Date(),
+    };
+  });
 };</script>`
 
 const server = http.createServer(async (req, res) => {
@@ -221,7 +126,7 @@ async function processFile(filePath: string) {
   const { frontmatter, markdown } = extractFrontmatter(content);
   const config = await loadConfig(frontmatter, path.dirname(filePath));
   config.head ||= '';
-  config.head += watcherJs + additional;
+  config.head += watcherJs;
   latestContent = await processor.process(markdown, config);
   latestHtml = await processor.wrapHtml(latestContent);
 }
@@ -255,7 +160,7 @@ function watchFile(filePath: string) {
         await processFile(filePath);
         wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(latestContent);
+            client.send(latestHtml);
           }
         });
         console.log(`Updated: ${filePath}`);

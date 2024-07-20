@@ -12,7 +12,7 @@ const inputPath = args.find(arg => !arg.startsWith('--')) || '.';
 // Determine if input is a file or directory
 const isFile = fs.existsSync(inputPath) && fs.statSync(inputPath).isFile();
 const inputDir = isFile ? path.dirname(inputPath) : inputPath;
-const outputDir = path.join(inputDir, 'dist');
+const outputDir = path.join(inputDir, '.');
 
 // Function to build docs
 const build = () => {
