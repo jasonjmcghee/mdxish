@@ -41,14 +41,21 @@ let lastState = null;
 
 window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
   startTime: new Date(),
+  scrollY: 0,
 };
 
+setTimeout(() => {
+  window.scroll(0, window.mdxishState.scrollY);
+}, 0);
+
 ws.onmessage = (event) => {
+  window.mdxishState.scrollY = window.scrollY;
   localStorage['mdxishState'] = JSON.stringify(window.mdxishState);
   window.location.reload();
   window.requestAnimationFrame(() => {
     window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
       startTime: new Date(),
+      scrollY: 0,
     };
   });
 };</script>`

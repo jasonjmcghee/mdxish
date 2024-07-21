@@ -129,6 +129,7 @@ export class CustomMDXProcessor {
         <script type="application/javascript">
           window.mdxishState = {
             startTime: new Date(),
+            scrollY: 0,
           };
           window.mdxref = (ref) => document.querySelector('[data-id="' + ref + '"]');
         </script>
