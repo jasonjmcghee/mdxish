@@ -44,3 +44,9 @@ To launch a live server that will automatically keep HTML up to date with whatev
 ```bash
 npm run server -- -i examples/falling-sand.md
 ```
+
+## Interactive Blog Tips!
+
+Have suggestions / tips about building interactive blogs?
+
+Add them [here](./TIPS.md)!
