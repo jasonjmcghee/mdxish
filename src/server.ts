@@ -39,6 +39,11 @@ const watcherJs = `<script type="application/javascript">
 const ws = new WebSocket('ws://' + location.host);
 let lastState = null;
 
+window.addEventListener("beforeunload", () => {
+  window.mdxishState.scrollY = window.scrollY;
+  localStorage['mdxishState'] = JSON.stringify(window.mdxishState);
+});
+
 window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
   startTime: new Date(),
   scrollY: 0,
