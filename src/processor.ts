@@ -72,8 +72,8 @@ export class CustomMDXProcessor {
       },
       renderer(token) {
         return `<script data-run-id="${token.id}" ${token.attributes}>
-          ${token.code}
-        </script>`;
+${token.code}
+</script>`;
       }
     };
 

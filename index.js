@@ -66,7 +66,9 @@ class CustomMDXProcessor {
         return undefined;
       },
       renderer(token) {
-        return `<script data-run-id="${token.id}" ${token.attributes}>${token.code}</script>`;
+        return `<script data-run-id="${token.id}" ${token.attributes}>
+${token.code}
+</script>`;
       }
     };
 
