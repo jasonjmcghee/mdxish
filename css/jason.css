@@ -5,9 +5,9 @@ html {
   --pre-background: #d3d3d3;
   --title-color: rgba(0, 0, 0, 0.8);
 }
-:not(pre)>code[class*=language-],pre[class*=language-] {
+:not(pre)>code,pre {
   background: #f6f6f6;
-  border: 1px solid #e7e7e7
+  border: 1px solid #e7e7e7;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,19 +26,11 @@ html {
   color: var(--background-color);
 }
 
-.title {
-}
-.title h1 {
+h1 {
   font-weight: 600;
   margin: 1rem 0 1rem 0;
   line-height: 1.15;
 }
-@media (min-width:800px) {
-  .title {
-    font-size: 24px;
-  }
-}
-
 
 html {
   background-color: var(--background-color);
@@ -95,14 +87,17 @@ body {
 .footer p {
   text-align: center;
 }
+pre {
+  padding: 16px;
+  line-height: 1.5;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 code {
   display: inline;
-  background: var(--pre-background);
-  padding: 2px 6px;
+  padding: 0 !important;
   border-radius: 4px;
-}
-code[class*=language-] {
-  padding: 0;
+  font-family: Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;
 }
 a {
   color: var(--text-link);
@@ -143,11 +138,17 @@ img {
   }
 }
 @media (prefers-color-scheme: dark) {
-  :not(pre)>code[class*=language-],pre[class*=language-]{
-    background: #0d1014;
-    border: 1px solid #3b3b3b
+  :not(pre)>code,pre{
+    background: #0d1014 !important;
+    border: 1px solid #3b3b3b !important;
   }
   canvas {
     border: solid 2px #3b3b3b;
+  }
+}
+
+@media (max-width:800px) {
+  h1 {
+    font-size: 200%;
   }
 }
