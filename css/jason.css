@@ -4,7 +4,7 @@ html {
   --text-link: #0a69da;
   --pre-background: #d3d3d3;
   --title-color: rgba(0, 0, 0, 0.8);
-  scroll-behavior: smooth;
+  --controls-color: #0275ff;
 }
 :not(pre)>code,pre {
   background: #f6f6f6;
@@ -120,6 +120,11 @@ li {
 p {
   line-height: 1.5;
   text-align: left;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+label {
+  user-select: none;
 }
 canvas {
   image-rendering: pixelated;
@@ -155,5 +160,36 @@ img {
 @media (max-width:800px) {
   h1 {
     font-size: 200%;
+  }
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  background: var(--article-text-color);
+  height: 8px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: var(--article-text-color);
+  height: 8px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  margin: -4px;
+  background: var(--controls-color);
+}
+
+input[type="range"]::-moz-range-thumb {
+  margin: -4px;
+  color: var(--controls-color);
+}
+
+@media (pointer: coarse) {
+  input[type="range"]::-webkit-slider-thumb,
+  input[type="range"]::-moz-range-thumb  {
+    width: 20px;
+    height: 20px;
   }
 }
