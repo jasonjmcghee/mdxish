@@ -72,7 +72,35 @@ ${token.code}
       }
     };
 
-    marked.use({ extensions: [customReferenceExtension, runCodeExtension] });
+    const customHeadingExtension = {
+      name: 'customHeading',
+      level: 'block',
+      start(src) { return src.match(/^#{1,6} .*/)?.index; },
+      tokenizer(src) {
+        const rule = /^(#{1,6}) (.*?)(?:\n|$)/;
+        const match = rule.exec(src);
+
+        if (match) {
+          const [raw, hashes, text] = match;
+          return {
+            type: 'customHeading',
+            raw,
+            depth: hashes.length,
+            text: text.trim(),
+            id: text.trim()
+              .toLowerCase()
+              .replace(/[^(\w| )]+/g, '')
+              .replace(/ /g, "-")
+          };
+        }
+        return undefined;
+      },
+      renderer(token) {
+        return `<h${token.depth} id="${token.id}">${token.text}</h${token.depth}>\n`;
+      }
+    };
+
+    marked.use({ extensions: [customReferenceExtension, runCodeExtension, customHeadingExtension] });
   }
 
   async process(markdown, config) {

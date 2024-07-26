@@ -4,10 +4,16 @@ html {
   --text-link: #0a69da;
   --pre-background: #d3d3d3;
   --title-color: rgba(0, 0, 0, 0.8);
+  scroll-behavior: smooth;
 }
 :not(pre)>code,pre {
   background: #f6f6f6;
   border: 1px solid #e7e7e7;
+  overflow: auto;
+}
+
+:not(pre)>code {
+  padding: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -95,7 +101,6 @@ pre {
 }
 code {
   display: inline;
-  padding: 0 !important;
   border-radius: 4px;
   font-family: Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;
 }

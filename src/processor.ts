@@ -1,4 +1,4 @@
-import { marked, TokenizerAndRendererExtension, TokenizerThis } from 'marked';
+import { marked, TokenizerAndRendererExtension } from 'marked';
 import { v4 as uuidv4 } from 'uuid';
 import { JSDOM } from 'jsdom';
 
@@ -77,11 +77,39 @@ ${token.code}
       }
     };
 
+    const customHeadingExtension: TokenizerAndRendererExtension = {
+      name: 'customHeading',
+      level: 'block',
+      start(src) { return src.match(/^#{1,6} .*/)?.index; },
+      tokenizer(src: string) {
+        const rule = /^(#{1,6}) (.*?)(?:\n|$)/;
+        const match = rule.exec(src);
+
+        if (match) {
+          const [raw, hashes, text] = match;
+          return {
+            type: 'customHeading',
+            raw,
+            depth: hashes.length,
+            text: text.trim(),
+            id: text.trim()
+              .toLowerCase()
+              .replace(/[^(\w| )]+/g, '')
+              .replace(/ /g, "-")
+          };
+        }
+        return undefined;
+      },
+      renderer(token) {
+        return `<h${token.depth} id="${token.id}">${token.text}</h${token.depth}>\n`;
+      }
+    };
+
     // Add custom properties to the Lexer prototype
     (marked.Lexer as any).prototype.customReferences = this.customReferences;
     (marked.Lexer as any).prototype.runCodeBlocks = this.runCodeBlocks;
 
-    marked.use({ extensions: [customReferenceExtension, runCodeExtension] });
+    marked.use({ extensions: [customReferenceExtension, runCodeExtension, customHeadingExtension] });
   }
 
   public async process(markdown: string, config: Config): Promise<string> {
