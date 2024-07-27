@@ -228,8 +228,15 @@ function loadConfig(frontmatter) {
 }
 
 async function main() {
-  const path = window.location.pathname.split('/');
-  const gistId = path[path.length - 1];
+  let path = window.location.pathname;
+  let hash = window.location.hash;
+
+  if (path.endsWith("/")) {
+    path = path.substring(0, path.length - 1);
+  }
+
+  path = path.split("/");
+  let gistId = path[path.length - 1];
 
   if (!gistId) {
     window.location.replace("https://github.com/jasonjmcghee/mdxish");
@@ -249,6 +256,9 @@ async function main() {
       newScript.appendChild(document.createTextNode(oldScript.innerHTML));
       oldScript.parentNode.replaceChild(newScript, oldScript);
     });
+
+    // If there's a hash, use it.
+    window.location.hash = hash;
   } catch (error) {
     console.error('Error rendering gist:', error);
     document.body.innerHTML = `
