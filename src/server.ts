@@ -1,11 +1,11 @@
-import { CustomMDXProcessor } from './processor.js';
+import {CustomMDXProcessor} from './processor.js';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import yaml from 'js-yaml';
-import { WebSocket, WebSocketServer } from 'ws';
+import {WebSocket, WebSocketServer} from 'ws';
 import http from 'http';
-import { program } from 'commander';
+import {program} from 'commander';
 import crypto from 'crypto';
 
 const processor = new CustomMDXProcessor();
@@ -54,16 +54,20 @@ setTimeout(() => {
 }, 0);
 
 ws.onmessage = (event) => {
-  window.mdxishState.scrollY = window.scrollY;
-  localStorage['mdxishState'] = JSON.stringify(window.mdxishState);
-  window.location.reload();
-  window.requestAnimationFrame(() => {
-    window.mdxishState = localStorage['mdxishState'] ? JSON.parse(localStorage['mdxishState']) : {
-      startTime: new Date(),
-      scrollY: 0,
-    };
-  });
-};</script>`
+  const payload = JSON.parse(event.data);
+  if (payload.type === "reload") {
+    window.mdxishState.scrollY = window.scrollY;
+    localStorage['mdxishState'] = JSON.stringify(window.mdxishState);
+    let shouldReload = true;
+    if (window.mdxishState.onReload) {
+      shouldReload = window.mdxishState.onReload(payload);
+    }
+
+    if (shouldReload) {
+      window.location.reload();
+    }
+  }
+};</script>`;
 
 const server = http.createServer(async (req, res) => {
   // Set CORS headers
@@ -79,7 +83,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(latestHtml);
   } else {
     // Serve static files
@@ -89,15 +93,15 @@ const server = http.createServer(async (req, res) => {
       const ext = path.extname(filePath);
       const contentType = getContentType(ext);
 
-      res.writeHead(200, { 'Content-Type': contentType });
+      res.writeHead(200, {'Content-Type': contentType});
       res.end(data);
     } catch (err: any) {
       console.error(err);
       if (err.code === 'ENOENT') {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.writeHead(404, {'Content-Type': 'text/plain'});
         res.end('404 Not Found');
       } else {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.writeHead(500, {'Content-Type': 'text/plain'});
         res.end('500 Internal Server Error');
       }
     }
@@ -124,7 +128,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({server});
 
 async function processFile(filePath: string) {
   const content = await fsPromises.readFile(filePath, 'utf-8');
@@ -135,7 +139,7 @@ async function processFile(filePath: string) {
   }
 
   lastFileHash = currentHash;
-  const { frontmatter, markdown } = extractFrontmatter(content);
+  const {frontmatter, markdown} = extractFrontmatter(content);
   const config = await loadConfig(frontmatter, path.dirname(filePath));
   config.head ||= '';
   config.head += watcherJs;
@@ -172,7 +176,9 @@ function watchFile(filePath: string) {
         await processFile(filePath);
         wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(latestHtml);
+            client.send(JSON.stringify(
+              {type: "reload", html: latestHtml}
+            ));
           }
         });
         console.log(`Updated: ${filePath}`);
@@ -191,7 +197,7 @@ function extractFrontmatter(content: string) {
       markdown: match[2],
     };
   }
-  return { frontmatter: {}, markdown: content };
+  return {frontmatter: {}, markdown: content};
 }
 
 async function loadConfig(frontmatter: Record<string, any>, inputDir: string) {
@@ -199,7 +205,7 @@ async function loadConfig(frontmatter: Record<string, any>, inputDir: string) {
   const configPath = path.join(inputDir, 'config.yml');
   if (await fsPromises.access(configPath).then(() => true).catch(() => false)) {
     const globalConfig = yaml.load(await fsPromises.readFile(configPath, 'utf-8')) as Record<string, any>;
-    config = { ...globalConfig, ...frontmatter };
+    config = {...globalConfig, ...frontmatter};
   } else {
     config = frontmatter;
   }

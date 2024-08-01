@@ -48,17 +48,18 @@ class CustomMDXProcessor {
       level: 'block',
       start(src) { return src.match(/^```[^\n]*\n[\s]*\/\/[\s]*@run/)?.index; },
       tokenizer(src) {
-        const rule = /^```[^\n]*\n([\s]*\/\/[\s]*@run(([ ][\w]+[=]"[^"]*")*)[\s\S]*?)\n```/;
+        const rule = /^```([^\n]*)\n([\s]*\/\/[\s]*@run(([ ][\w]+[=]"[^"]*")*)[\s\S]*?)\n```/;
         const match = rule.exec(src);
 
         if (match) {
-          const [raw, code, attributes] = match;
+          const [raw, language, code, attributes] = match;
           const id = uuid();
           processor.runCodeBlocks[id] = code;
           return {
             type: 'runCode',
             raw,
             id,
+            language,
             code,
             attributes
           };
@@ -66,6 +67,10 @@ class CustomMDXProcessor {
         return undefined;
       },
       renderer(token) {
+        if (token.language === "html") {
+          const firstNewline = token.code.indexOf("\n");
+          return token.code.substring(firstNewline + 1);
+        }
         return `<script data-run-id="${token.id}" ${token.attributes}>
 ${token.code}
 </script>`;
