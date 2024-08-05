@@ -1987,7 +1987,7 @@ class GI extends DistanceField {
 const gi = new GI({ id: "gi", width: 300, height: 400 });
 
 let finalWidth = 300;
-let giFinal = new GI({ id: "final", width: 600, height: 600 });
+let giFinal = new GI({ id: "final", width: finalWidth, height: 400 });
 
 if (!isMobile) {
   let performanceMode = true;
