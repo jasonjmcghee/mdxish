@@ -542,7 +542,7 @@ If you've never heard about SDFs (signed distance functions) you can [read about
 
 And I know, you're probably saying - but there are no calls to `distance` or `length` - what gives? This doesn't look like the examples. But a neat trick is that we can avoid a `sqrt`, if we use `dot` and keep everything we're comparing squared. To clarify, `distance(a, b)` == `length(a - b)` == `sqrt(dot(a - b, a - b))`. So if we're comparing to `radius` - we can instead just pass in `radius * radius` and not need `sqrt`. (`sqrt` is expensive).
 
-At this point, we can draw our line. _You can also check out how I did the CPU / mobile version of drawing in the source code._
+At this point, we can draw our line.
 
 ```glsl
 void main() {
