@@ -47,7 +47,7 @@ npm run server -- -i examples/falling-sand.md
 
 ## Examples
 
-Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md).
+Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md). I strongly recommend using an IDE to view the markdown, as opposed to GitHub's preview.
 
 ## Interactive Blog Tips!
 
