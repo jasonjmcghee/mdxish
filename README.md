@@ -47,6 +47,8 @@ To launch a live server that will automatically keep HTML up to date with whatev
 npm run server -- -i examples/falling-sand.md
 ```
 
+Note: this approach completely reloads all html / scripts on any change. You can customize this behavior to do whatever you want with the newly rendered HTML. Here's how to specify [custom hot reload behavior](./TIPS.md#custom-hot-reload-behavior).
+
 ## Examples
 
 Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md). I strongly recommend using an IDE to view the markdown, as opposed to GitHub's preview.
