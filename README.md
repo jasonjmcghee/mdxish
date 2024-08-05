@@ -5,10 +5,15 @@
 
 Write high-quality, interactive blog posts in markdown, live.
 
+[See this readme rendered with mdxish instead](https://mdxish.com/jasonjmcghee/f3cfbd700db8f5115c40adbe07ca1bcf)
+
 ## In a nutshell
-- write in markdown optionally including html
-- start a codeblock with `// @run` to auto-execute
+- write in markdown optionally including html / codeblocks
+- start a codeblock with `// @run` as the first line to render directly instead of as `pre`. 
+  - javascript / glsl become `<script>`, html renders, etc. 
+  - Attributes can be specified for scripts like `// @run id="foo" type="bar"`.
 - optionally specify title and head block (e.g. custom styles or scripts outside of core post)
+- All headers are automatically given an `id` of their contents lowercase and hyphenated for easy linking - which can be done in markdown like `[some text](#in-a-nutshell)`.
 
 ## Checkout an example
 
