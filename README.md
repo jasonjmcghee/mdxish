@@ -45,6 +45,10 @@ To launch a live server that will automatically keep HTML up to date with whatev
 npm run server -- -i examples/falling-sand.md
 ```
 
+## Examples
+
+Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md).
+
 ## Interactive Blog Tips!
 
 Have suggestions / tips about building interactive blogs?

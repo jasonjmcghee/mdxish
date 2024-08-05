@@ -1146,7 +1146,12 @@ And we could increase the rays, replicate those features (grain and sun) and cal
 
 If we take a moment to think about the core logic of our raymarching, we're doing a lot of repeated work. Think about all the overlapping steps we're taking - hint they are mostly overlapping. So caching right? Well, most of what we're doing is in parallel per-pixel, so the values of other pixels aren't available yet. So we're going to have to come up with another approach.
 
-Remember those distance fields from earlier? Where we were representing shapes in terms of their distance away from any given pixel? Well, if we had a way to tell how far away the nearest filled pixel was, from any given pixel, we'd know the maxiumum safe distance we could jump - in any direction. After we jumped, we could reassess, and again know the maximum safe distance we could jump. This would save a ton of computation during our raymarching process as we're getting to completely ignore large swathes of our surface.
+```html
+// @run
+<p id="distance-field-definition">
+  Remember those distance fields from earlier? Where we were representing shapes in terms of their distance away from any given pixel? Well, if we had a way to tell how far away the nearest filled pixel was, from any given pixel, we'd know the maxiumum safe distance we could jump - in any direction. After we jumped, we could reassess, and again know the maximum safe distance we could jump. This would save a ton of computation during our raymarching process as we're getting to completely ignore large swathes of our surface.
+</p>
+```
 
 [//]: # (I should include an interactive demo of the sphere casting process, which shows a starting point, choosing a direction, the circle growing to hit a filled pixel, the circle fading to low alpha, then jumping to the rim of the circle. And repeating until we hit a light.)
 
@@ -1156,7 +1161,7 @@ But maybe we can get more creative.
 
 ### Jump Flood Algorithm
 
-The loose idea here is, if we get the pixel coordinates of every filled pixel in our input / surface texture, and spread them around in the right way, we'll end up with a texture where every pixel from our original image is still just its `uv`, but all the other pixels are the nearest `uv` from the original image. If we manage to do that - all we need to do is calculate the distance of the original and newly smeared pixel locations, at each pixel, and we've got a distance field we can use.
+The loose idea here is, if we get the pixel coordinates of every filled pixel in our input / surface texture, and spread them around in the right way, we'll end up with a texture where every pixel from our original image is still just its `uv`, but all the other pixels are whichever `uv` from the original image is the least distance away. If we manage to do that - all we need to do is calculate the distance between the original and newly smeared pixel locations, at each pixel, and we've got a [distance field](#distance-field-definition).
 
 For the "smearing" bit - we can just hierarchically repeat our `vUv` transformed `seed` texture, on top of itself a handful of times.
 
