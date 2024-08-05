@@ -22,6 +22,8 @@ Source (click "Raw" to see the raw markdown):
 
 https://gist.github.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
 
+This is purely for demonstrative purposes - check the [examples](./examples) folder for more recent examples of posts build with mdxish.
+
 ## 4-Minute Video Introduction (🔉 Sound on)
 
 https://github.com/user-attachments/assets/cc416a37-5d33-4452-a5b2-7754e6932fad
@@ -48,6 +50,8 @@ npm run server -- -i examples/falling-sand.md
 ## Examples
 
 Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md). I strongly recommend using an IDE to view the markdown, as opposed to GitHub's preview.
+
+Wrote a blog with mdxish and want to share it? Awesome! Open a PR and we'll add it to the examples!
 
 ## Interactive Blog Tips!
 
