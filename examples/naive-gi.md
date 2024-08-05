@@ -226,7 +226,7 @@ class PaintableCanvas {
   }
   
   useFallbackCanvas() {
-    return isMobile;
+    return false;
   }
 
   // Mobile breaks in all kinds of ways
@@ -563,8 +563,6 @@ Any time you see `uv` (or `vUv`), it is the position of the current pixel, but o
 _ThreeJS uses `vUv`. I believe that first `v` is for [`varying` keyword](https://jameshfisher.com/2017/10/19/glsl-varying/)._
 
 If you want to add some extra polish you can make it feel a bit smoother / paintier by adding easing. Check the source to see how I did it! Spoiler: I cheated and did it on the CPU.
-
-_Also, if you're wondering what that note is... For mobile, I ran into all kinds of issues with enabling transparency and drawing with the GPU for this step. Let me know if you manage to nail it. I ejected and drew directly to the canvas on the CPU side, which is slow at higher resolutions, but works for the canvas sizes we're using. But, everything after this step is GPU-driven._
 
 Whichever engine you're using, be it a game engine, webgl, p5.js, three.js, webgpu, (and most others), there will be a way to say, "draw this rgb value at this location", and then it's just expanding that to a radius, from one point to another - or using SDFs as shown above.
 
