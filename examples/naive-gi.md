@@ -11,10 +11,7 @@ head: '
   <meta property="og:url" content="https://jason.today/gi">
   <meta property="og:image" content="https://jason.today/img/gi.png">
 
-  <link rel="stylesheet" href="../css/prism.css">
-  <link rel="stylesheet" href="../css/normalize.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/jason-v2.css">
+  <link rel="stylesheet" href="../css/mdxish.css">
   <script src="../js/three.js"></script>
   <script src="../js/prism.js"></script>
   <style>

@@ -6,10 +6,7 @@ scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js
 head: '
-  <link rel="stylesheet" href="css/prism.css">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/jason.css">
+  <link rel="stylesheet" href="../css/mdxish.css">
 '
 ---
 
