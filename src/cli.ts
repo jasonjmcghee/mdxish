@@ -1,51 +1,76 @@
 #!/usr/bin/env node
+import { Command } from 'commander';
 import { buildDocs } from './build.js';
+import { live } from './server.js';
 import path from 'path';
 import fs from 'fs';
 
-// Parse command line arguments
-const args = process.argv.slice(2);
-const watchMode = args.includes('--watch');
-const recursiveMode = args.includes('--recursive');
-const inputPath = args.find(arg => !arg.startsWith('--')) || '.';
+const program = new Command();
 
-// Determine if input is a file or directory
-const isFile = fs.existsSync(inputPath) && fs.statSync(inputPath).isFile();
-const inputDir = isFile ? path.dirname(inputPath) : inputPath;
-const outputDir = path.join(inputDir, '.');
+program
+  .description('Write high-quality, interactive blog posts in markdown, live.');
 
-// Function to build docs
-const build = () => {
-  console.log('Building docs...');
-  if (isFile) {
-    buildDocs(inputPath, outputDir).catch(console.error);
-  } else {
-    buildDocs(inputDir, outputDir).catch(console.error);
-  }
-};
+program
+  .command('convert')
+  .description('Convert MDX-like files to HTML')
+  .argument('<path>', 'Input file or directory')
+  .option('-o, --output <path>', 'Output directory')
+  .option('-r, --recursive', 'Process directories recursively')
+  .option('-w, --watch', 'Watch for file changes')
+  .action((file, options) => {
+    const inputPath = file;
+    const outputPath = options.output || '.';
+    const isRecursive = options.recursive || false;
+    const watchMode = options.watch || false;
 
-// Initial build
-build();
+    const isFile = fs.existsSync(inputPath) && fs.statSync(inputPath).isFile();
+    const inputDir = isFile ? path.dirname(inputPath) : inputPath;
+    const outputDir = path.resolve(outputPath);
 
-// If watch mode is enabled, set up file watching
-if (watchMode) {
-  const watchPath = isFile ? inputPath : inputDir;
-  const watchOptions = { recursive: recursiveMode };
+    const build = () => {
+      console.log('Building docs...');
+      if (isFile) {
+        buildDocs(inputPath, outputDir).catch(console.error);
+      } else {
+        buildDocs(inputDir, outputDir).catch(console.error);
+      }
+    };
 
-  console.log(`Watching for changes in ${watchPath}${recursiveMode ? ' and its subdirectories' : ''}...`);
+    build();
 
-  fs.watch(watchPath, watchOptions, (eventType, filename) => {
-    if (isFile && filename !== path.basename(inputPath)) return;
+    if (watchMode) {
+      const watchPath = isFile ? inputPath : inputDir;
+      const watchOptions = { recursive: isRecursive };
 
-    if (filename) {
-      console.log(`File ${filename} has been changed`);
-      build();
+      console.log(`Watching for changes in ${watchPath}${isRecursive ? ' and its subdirectories' : ''}...`);
+
+      fs.watch(watchPath, watchOptions, (eventType, filename) => {
+        if (isFile && filename !== path.basename(inputPath)) return;
+
+        if (filename) {
+          console.log(`File ${filename} has been changed`);
+          build();
+        }
+      });
+    } else {
+      console.log('Build completed. Use --watch to enable watch mode.');
     }
   });
-} else {
-  console.log('Build completed. Use --watch to enable watch mode.');
-}
 
-console.log('Options:');
-console.log('  --watch      Watch for file changes');
-console.log('  --recursive  Watch subdirectories (only applicable with --watch)');
+program
+  .command('live')
+  .description('Start live server for a single md file')
+  .argument('<file>', 'Input md file')
+  .action((file, options) => {
+    const inputPath = path.resolve(file);
+
+    if (!fs.existsSync(inputPath) || !fs.statSync(inputPath).isFile()) {
+      console.error('Input must be a valid file');
+      process.exit(1);
+    }
+
+    console.log(`Starting live server for ${inputPath}`);
+    live(inputPath);
+  });
+
+program.parse(process.argv);

@@ -11,8 +11,9 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "convert": "node dist/cli.js",
-    "server": "node dist/server.js"
+    "convert": "node dist/cli.js convert",
+    "live": "node dist/cli.js live",
+    "server": "node dist/cli.js live"
   },
   "keywords": [
     "mdx",

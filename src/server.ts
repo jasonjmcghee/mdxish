@@ -10,22 +10,6 @@ import crypto from 'crypto';
 
 const processor = new CustomMDXProcessor();
 
-program
-  .option('-i, --input <path>', 'Input file or directory')
-  .option('-o, --output <path>', 'Output directory')
-  .option('-r, --recursive', 'Process directories recursively')
-  .parse(process.argv);
-
-const options = program.opts();
-const inputPath = options.input;
-const outputPath = options.output || 'output';
-const isRecursive = options.recursive || false;
-
-if (!inputPath) {
-  console.error('Please provide an input file or directory using the -i or --input option.');
-  process.exit(1);
-}
-
 let latestHtml = '';
 let latestContent = '';
 
@@ -150,18 +134,7 @@ async function processFile(filePath: string) {
 async function watchAndProcess(watchPath: string) {
   const stats = await fsPromises.stat(watchPath);
 
-  if (stats.isDirectory()) {
-    const files = await fsPromises.readdir(watchPath);
-    for (const file of files) {
-      const fullPath = path.join(watchPath, file);
-      const fileStats = await fsPromises.stat(fullPath);
-      if (fileStats.isDirectory() && isRecursive) {
-        await watchAndProcess(fullPath);
-      } else if (path.extname(file) === '.md') {
-        watchFile(fullPath);
-      }
-    }
-  } else if (stats.isFile() && path.extname(watchPath) === '.md') {
+  if (stats.isFile() && path.extname(watchPath) === '.md') {
     watchFile(watchPath);
   } else {
     console.error(`${watchPath} is neither a directory nor a Markdown file.`);
@@ -169,7 +142,6 @@ async function watchAndProcess(watchPath: string) {
 }
 
 function watchFile(filePath: string) {
-  console.log(`Watching file: ${filePath}`);
   fs.watch(filePath, async (eventType) => {
     if (eventType === 'change') {
       try {
@@ -212,26 +184,14 @@ async function loadConfig(frontmatter: Record<string, any>, inputDir: string) {
   return config;
 }
 
-async function main() {
+export async function live(inputPath: string) {
   // Initial processing
-  if ((await fsPromises.stat(inputPath)).isDirectory()) {
-    const files = await fsPromises.readdir(inputPath);
-    for (const file of files) {
-      if (path.extname(file) === '.md') {
-        await processFile(path.join(inputPath, file));
-        break; // Process only the first Markdown file found
-      }
-    }
-  } else {
-    await processFile(inputPath);
-  }
+  await processFile(inputPath);
 
   // Start watching for changes
   await watchAndProcess(inputPath);
 
-  server.listen(8080, () => {
-    console.log('Server running on http://localhost:8080');
+  server.listen(8080, "0.0.0.0", () => {
+    console.log('See it live at: http://localhost:8080');
   });
 }
-
-main().catch(console.error);

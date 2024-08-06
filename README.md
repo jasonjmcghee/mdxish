@@ -29,9 +29,13 @@ https://gist.github.com/jasonjmcghee/cba64163600fa90a3ea5d2ea099f3b55
 
 This is purely for demonstrative purposes - check the [examples](./examples) folder for more recent examples of posts build with mdxish.
 
-## 4-Minute Video Introduction (🔉 Sound on)
+# Installation
 
-https://github.com/user-attachments/assets/cc416a37-5d33-4452-a5b2-7754e6932fad
+```bash
+npm install -g mdxish
+```
+
+Or you can clone the repo and use `npm run`.
 
 ## Getting started
 
@@ -43,13 +47,13 @@ There are two main ways mdxish can be used.
 For example:
 
 ```bash
-npm run convert examples/falling-sand.md falling-sand.html
+mdxish convert examples/falling-sand.md
 ```
 
 To launch a live server that will automatically keep HTML up to date with whatever you write in your mdxish flavored markdown:
 
 ```bash
-npm run server -- -i examples/falling-sand.md
+mdxish live examples/falling-sand.md
 ```
 
 Note: this approach completely reloads all html / scripts on any change. You can customize this behavior to do whatever you want with the newly rendered HTML. Here's how to specify [custom hot reload behavior](./TIPS.md#custom-hot-reload-behavior).
@@ -59,6 +63,12 @@ Note: this approach completely reloads all html / scripts on any change. You can
 Check the [examples](./examples) directory. The current best demonstration of capabilities is [naive-gi.md](./examples/naive-gi.md). I strongly recommend using an IDE to view the markdown, as opposed to GitHub's preview.
 
 Wrote a blog with mdxish and want to share it? Awesome! Open a PR and we'll add it to the examples!
+
+
+## Video Introduction (🔉 Sound on)
+
+https://github.com/user-attachments/assets/cc416a37-5d33-4452-a5b2-7754e6932fad
+
 
 ## Interactive Blog Tips!
 
