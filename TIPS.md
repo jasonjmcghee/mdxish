@@ -8,8 +8,15 @@ Here's an example of how you might override the `onReload` function. Instead of 
 
 And just like that, we have hot-reloading fragment shaders without reloading the page, or resetting / touching any other state, like painted images on the canvas.
 
+We can even take it a step further where we check to see if any of the values we care about updated, and if they did, we only update those, otherwise we update the whole page. This way we can seamlessly update (in this case) shaders without refreshing the page, but if we update something else, it automatically updates for us.
+
 ```javascript
 window.mdxishState.onReload = (event) => {
+  const oldShaderSet = new Set(
+    Object.keys(window[instance])
+    .filter((a) => a.toLowerCase().includes("plane"))
+    .map((p) => window[instance][p]?.material?.fragmentShader)
+  );
   document.querySelectorAll("iframe").forEach((o) => {
     o.parentNode.removeChild(o);
   });
@@ -18,14 +25,30 @@ window.mdxishState.onReload = (event) => {
   document.body.appendChild(iframe);
   const htmlContent = event.html;
   iframe.srcdoc = htmlContent;
+
   iframe.onload = () => {
+    const win = iframe.contentWindow[instance];
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-    const shaders = Object.keys(iframe.contentWindow[instance]).filter((a) => a.toLowerCase().includes("plane")).forEach((p) => {
-      if (iframe.contentWindow[instance][p]?.material) {
-        const shader = iframe.contentWindow[instance][p].material.fragmentShader;
-        self[p].material.fragmentShader = shader;
-        self[p].material.needsUpdate = true;
+    const shaders = Object.keys(win)
+      .filter((a) => a.toLowerCase().includes("plane"))
+      .map((p) => win?.[p]?.material?.fragmentShader);
+
+    if (oldShaderSet.size === shaders.length) {
+      const same = shaders.filter((shader) => oldShaderSet.has(shader));
+      if (same.length === shaders.length) {
+        window.location.reload();
+        return;
       }
+    }
+
+    Object.keys(win)
+      .filter((a) => a.toLowerCase().includes("plane"))
+      .forEach((p) => {
+        const shader = win?.[p]?.material?.fragmentShader;
+        if (shader) {
+          self[p].material.fragmentShader = shader;
+          self[p].material.needsUpdate = true;
+        }
     });
 
     self.renderPass();
