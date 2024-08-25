@@ -26,6 +26,8 @@ h3 { font-size: 200%; }
 
 @media (max-width: 800px) {
   h1 { font-size: 200%; }
+  h2 { font-size: 175%; }
+  h3 { font-size: 150%; }
 }
 
 p { line-height: 1.5; margin: 12px 0; }
@@ -99,24 +101,38 @@ button {
   color: var(--article-text-color);
   background-color: var(--pre-background);
 }
-label { user-select: none; }
+button[selected="true"] {
+  color: var(--pre-background);
+  background-color: var(--article-text-color);
+}
+label { user-select: none; cursor: pointer }
 
-/* Range input styling */
-input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  background: var(--article-text-color);
+  height: 8px;
+  border-radius: 4px;
+}
+
 input[type="range"]::-moz-range-track {
   background: var(--article-text-color);
   height: 8px;
   border-radius: 4px;
 }
-input[type="range"]::-webkit-slider-thumb,
-input[type="range"]::-moz-range-thumb {
+
+input[type="range"]::-webkit-slider-thumb {
   margin: -4px;
   background: var(--controls-color);
 }
 
+input[type="range"]::-moz-range-thumb {
+  margin: -4px;
+  color: var(--controls-color);
+}
+
 @media (pointer: coarse) {
   input[type="range"]::-webkit-slider-thumb,
-  input[type="range"]::-moz-range-thumb {
+  input[type="range"]::-moz-range-thumb  {
     width: 20px;
     height: 20px;
   }
