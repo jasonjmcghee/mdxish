@@ -39,6 +39,16 @@ a {
   color: var(--text-link);
   text-decoration: none;
   background-color: transparent;
+  /* Basic wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  /* Prevent overflow */
+  max-width: 100%;
+  display: inline-block;
+  
+  /* Optional: improve readability */
+  line-height: 1.5;
 }
 a::selection { background: var(--text-link); }
 
